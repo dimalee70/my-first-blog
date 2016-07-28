@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
+    'nocaptcha_recaptcha',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -52,6 +54,14 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'mysite.urls'
+
+
+NORECAPTCHA_SITE_KEY = '6Ler9SUTAAAAAHcGgkMAu6gFX7Xm5-WQRZdbG5o_'
+NORECAPTCHA_SECRET_KEY = '6Ler9SUTAAAAAPjEqdWKgnglmCk1kzlEJoySf8l5'
+
+NOCAPTCHA = True
+
+CAPTCHA_AJAX = True
 
 TEMPLATES = [
     {

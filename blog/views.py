@@ -3,9 +3,10 @@ from django.shortcuts import render_to_response
 from .models import Post, Comment
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, CaptchaForm
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 
@@ -22,13 +23,16 @@ def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
         form = CommentForm(request.POST)
-        if form.is_valid():
+        formCaptcha = CaptchaForm(request.POST)
+        if (form.is_valid() and formCaptcha.is_valid()):
+            human = True
             comment = form.save(commit = False)
             comment.post = post
             comment.save()
             return redirect('blog.views.post_detail',pk = post.pk)
     else:
         form = CommentForm();
+        formCaptcha = CaptchaForm()
     return render(request, 'blog/post_detail.html', {'post': post,'form':form})
 
 
