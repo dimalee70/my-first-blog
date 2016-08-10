@@ -1,0 +1,46 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <div class="post">
+            {% if post.published_date %}
+                <div class="date">
+                    {{ post.published_date }}
+                </div>
+            {% else %}
+                <a class="btn btn-default" href="{% url 'blog.views.post_publish' pk=post.pk %}">Publish</a>
+            {% endif %}
+        <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+        <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+        <h1>{{ post.title }}</h1>
+        <p>{{ post.text|linebreaksbr }}</p>
+    </div>
+<hr>
+<div class="comments_wall" id='{{ post.pk }}'>
+{% for comment in post.comments.all %}
+    {% if user.is_authenticated or comment.approved_comment %}
+    <div class="comment">
+        <div class="date">
+            {{ comment.created_date }}
+            {% if not comment.approved_comment %}
+                <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+                <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
+            {% endif %}
+        </div>
+        <div id="comment_content">
+        <div id = "id_author"><strong>{{ comment.author }}</strong></div>
+        <div id = "id_text"><p>{{ comment.text|linebreaks }}</p></div>
+    </div>
+  </div>
+    {% endif %}
+{% empty %}
+    <p>No comments here yet :(</p>
+{% endfor %}
+</div>
+<h1>New comment</h1>
+<form method="POST" class="post-form" id = "post-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Send" class="tiny button">
+    <div class="g-recaptcha" data-sitekey="6Ler9SUTAAAAAHcGgkMAu6gFX7Xm5-WQRZdbG5o_"></div>
+</form>
+{% endblock %}
